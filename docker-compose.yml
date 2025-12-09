@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  # --- DATABASE ---
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=sentry_secret
+      - POSTGRES_DB=sentry_db
+    ports:
+      - "5432:5432"
+
+  # --- REDIS (For Celery) ---
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  # --- BACKEND API ---
+  backend:
+    build: ./backend
+    command: uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - ./backend:/app/backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:sentry_secret@db/sentry_db
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      - db
+      - redis
+
+  # --- CELERY WORKER ---
+  worker:
+    build: ./backend
+    # 'celery' command runs from the root /app directory in the container
+    command: celery -A backend.app.workers.celery worker --loglevel=info
+    volumes:
+      - ./backend:/app/backend
+    environment:
+      - DATABASE_URL=postgresql://postgres:sentry_secret@db/sentry_db
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      - backend
+      - redis
+
+  # --- FRONTEND ---
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      # This trick prevents the container's node_modules from being overwritten by your local (empty) ones if you delete them
+      - /app/node_modules
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
