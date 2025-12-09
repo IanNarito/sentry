@@ -1,6 +1,6 @@
 # SENTRY - Advanced Reconnaissance Platform
 
-![Sentry Dashboard](https://via.placeholder.com/1200x600?text=SENTRY+Dashboard+Screenshot)
+![Sentry Dashboard](img/dsentry.png)
 **SENTRY** is a full-stack, automated cybersecurity reconnaissance framework designed for Red Team operations and Bug Bounty hunting. It integrates multiple scanning modules into a unified dashboard, automating the "Discovery" and "Enumeration" phases of an engagement.
 
 Unlike passive scanners, SENTRY actively analyzes targets, identifies vulnerabilities (CVEs), detects defenses (WAFs), and visualizes infrastructure topology.
@@ -79,12 +79,12 @@ cd backend
 python -m venv .venv
 source .venv/bin/activate  # or .venv\Scripts\activate on Windows
 pip install -r requirements.txt
+cd ..
 uvicorn backend.app.main:app --reload
 ```
 
 ### 2. Worker Setup (Open new terminal)
 ```bash
-cd backend
 source .venv/bin/activate
 # On Linux/Mac:
 celery -A backend.app.workers.celery worker --loglevel=info
