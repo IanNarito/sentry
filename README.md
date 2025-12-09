@@ -48,7 +48,7 @@ The easiest way to run SENTRY is via Docker Compose. This handles the database, 
 ### Steps
 1.  **Clone the repository**
     ```bash
-    git clone [https://github.com/yourusername/sentry.git](https://github.com/yourusername/sentry.git)
+    git clone https://github.com/IanNarito/sentry.git
     cd sentry
     ```
 
