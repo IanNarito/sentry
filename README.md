@@ -1,6 +1,6 @@
 # SENTRY - Advanced Reconnaissance Platform
 
-![Sentry Dashboard](img/dsentry.png)
+![Sentry Dashboard](img/sentry.png)
 **SENTRY** is a full-stack, automated cybersecurity reconnaissance framework designed for Red Team operations and Bug Bounty hunting. It integrates multiple scanning modules into a unified dashboard, automating the "Discovery" and "Enumeration" phases of an engagement.
 
 Unlike passive scanners, SENTRY actively analyzes targets, identifies vulnerabilities (CVEs), detects defenses (WAFs), and visualizes infrastructure topology.
